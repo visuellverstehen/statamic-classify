@@ -34,6 +34,10 @@
     "orchestra/testbench": "^5.0",
     "phpunit/phpunit": "^8.5"
   },
+  "scripts": {
+    "test": "vendor/bin/phpunit",
+    "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+  },
   "extra": {
     "statamic": {
       "name": "Statamic-Classify",
