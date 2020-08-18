@@ -1,0 +1,39 @@
+{
+  "name": "visuellverstehen/statamic-classify",
+  "description": "A Statamic addon to configure default styles wich will be set to Bard elements.",
+  "keywords": [
+    "Statamic",
+    "V3"
+  ],
+  "license": "proprietary",
+  "type": "statamic-addon",
+  "autoload": {
+    "psr-4": {
+      "VV\\Classify\\": "src"
+    }
+  },
+  "authors": [
+    {
+      "name": "visuellvertsehen"
+    }
+  ],
+  "support": {
+    "email": "kontakt@visuellverstehen.de"
+  },
+  "require": {
+    "php": "^7.2.5",
+    "illuminate/support": "7.*",
+    "statamic/cms": "3.*@beta"
+  },
+  "extra": {
+    "statamic": {
+      "name": "Statamic-Classify",
+      "description": "A Statamic addon to configure default styles wich will be set to Bard elements."
+    },
+    "laravel": {
+      "providers": [
+        "VV\\Classify\\ServiceProvider"
+      ]
+    }
+  }
+}
