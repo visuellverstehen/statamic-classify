@@ -12,6 +12,11 @@
       "VV\\Classify\\": "src"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "VV\\Classify\\Tests\\": "tests"
+    }
+  },
   "authors": [
     {
       "name": "visuellvertsehen"
@@ -24,6 +29,10 @@
     "php": "^7.2.5",
     "illuminate/support": "7.*",
     "statamic/cms": "3.*@beta"
+  },
+  "require-dev": {
+    "orchestra/testbench": "^5.0",
+    "phpunit/phpunit": "^8.5"
   },
   "extra": {
     "statamic": {
