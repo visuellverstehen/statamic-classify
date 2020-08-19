@@ -3,6 +3,7 @@
 namespace VV\Classify;
 
 use Statamic\Providers\AddonServiceProvider;
+use Statamic\Statamic;
 
 class ServiceProvider extends AddonServiceProvider
 {
@@ -17,10 +18,18 @@ class ServiceProvider extends AddonServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'classify');
 
         if ($this->app->runningInConsole()) {
-
             $this->publishes([
                 __DIR__ . '/../config/config.php' => config_path('classify.php'),
-            ], 'Classify config');
+            ], 'classify config');
         }
+
+        $this->publishConfigFile();
+    }
+
+    private function publishConfigFile()
+    {
+        Statamic::afterInstalled(function ($command) {
+            $command->call('vendor:publish', ['--tag' => 'classify',]);
+        });
     }
 }
