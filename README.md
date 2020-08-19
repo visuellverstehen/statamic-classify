@@ -6,13 +6,13 @@ Classify is a useful helper to add CSS Classes to all of your HTML tags, created
 
 ## What it does
 Bard's default output would be:
-```
+```html
 <h1>A nice headline</h1>
 <p>Something really <a href="#">important</a></p>
 ```
 
 Would you like to add some classes to different HTML tags?
-```
+```html
 <h1 class="text-2xl">A nice headline</h1>
 <p>Something really <a class="link hover:blue" href="#">important</a></p>
 ```
@@ -23,7 +23,7 @@ In that case, Classfiy will be your friend.
 
 1. Install Classify from the `Tools > Addons` section of your control panel, or via composer:
 
-```
+```bash
 composer require visuellverstehen/statamic-classify
 ```
 
@@ -35,7 +35,7 @@ The installation process will automatically publish the `classify.php` file into
 
 ### Configuration
 To add or change style sets, simply add or change an array with classes that should be added to the HTML Tag.
-```
+```php
 'default' => [
         'h1' => 'text-2xl',
         'a'  => 'link hover:blue',
@@ -45,12 +45,12 @@ To add or change style sets, simply add or change an array with classes that sho
 ### Usage
 
 If you want to use the default style set, use the `classify` modifier. 
-```
+```php
 {{ bard_text | classify }}
 ```
 
 If you want to add multiple style sets, define those in the config file. For example:
-```
+```php
 // config
 'blog' => [
     'button' => 'button button--blue',
