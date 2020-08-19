@@ -20,7 +20,7 @@ class ServiceProvider extends AddonServiceProvider
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__ . '/../config/config.php' => config_path('classify.php'),
-            ], 'classify config');
+            ], 'classify');
         }
 
         $this->publishConfigFile();
