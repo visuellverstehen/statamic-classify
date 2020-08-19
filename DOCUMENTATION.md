@@ -7,7 +7,7 @@ composer require visuellverstehen/statamic-classify
 ```
 ## Configuration
 
-After installation there will be a [classify.php](config/classify.php) file in the `config` folder.
+After installation there will be a `classify.php` file in the `config` folder.
 To add or change stylesets simply add or change an array with classes that should be added to the HTML Tag.
 
 ## Usage
