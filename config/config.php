@@ -8,6 +8,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Here you can define different style collections.
+    | To add a new styleset you have to add a new array like the 'blog' array.
     |
     */
 
@@ -16,4 +17,9 @@ return [
         'a'  => 'link',
         'p' => 'paragraph',
     ],
+
+    // 'blog' => [
+    //     'button' => 'button button--blue',
+    //     'a'  => 'link',
+    // ],
 ];
