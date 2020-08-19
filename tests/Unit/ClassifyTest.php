@@ -6,7 +6,7 @@ use VV\Classify\Tests\TestCase;
 
 class ClassifyTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
