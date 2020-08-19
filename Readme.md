@@ -4,4 +4,4 @@
 
 This addon lets you easily create sylesets which you can then apply to HTML tags coming from the Bard Editor.
 
-## [Documentation](DOCUMENTATION.md)
+ [Documentation](DOCUMENTATION.md)
