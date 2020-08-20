@@ -2,10 +2,10 @@
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/visuellverstehen/statamic-classify.svg?style=for-the-badge)](https://packagist.org/packages/jonassiewertsen/statamic-butik)
 
 # Classify
-Classify is a useful helper to add CSS Classes to all of your HTML tags, created by the [bard](https://statamic.dev/fieldtypes/bard) editor. 
+Classify is a useful helper to add CSS classes to all of your HTML tags, created by the [Bard](https://statamic.dev/fieldtypes/bard) editor. 
 
 ## What it does
-Bard's default output would be:
+Bards default output would be:
 ```html
 <h1>A nice headline</h1>
 <p>Something really <a href="#">important</a></p>
@@ -17,7 +17,7 @@ Would you like to add some classes to different HTML tags?
 <p>Something really <a class="link hover:blue" href="#">important</a></p>
 ```
 
-In that case, Classfiy will be your friend.
+In that case, Classify will be your friend.
 
 ## Installation
 
@@ -34,7 +34,7 @@ The installation process will automatically publish the `classify.php` file into
 ## Usage
 
 ### Configuration
-To add or change style sets, simply add or change an array with classes that should be added to the HTML Tag.
+To add or change style sets, simply add or change an array with classes that should be added to the HTML tag.
 ```php
 'default' => [
         'h1' => 'text-2xl',
@@ -62,5 +62,5 @@ If you want to add multiple style sets, define those in the config file. For exa
 ```
 
 # License
-The MIT License (MIT). Please see our [License File](LICENSE.md) for more information.
+The MIT License (MIT). Please take a look at our [License File](LICENSE.md) for more information.
 
