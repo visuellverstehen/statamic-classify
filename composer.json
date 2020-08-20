@@ -1,9 +1,11 @@
 {
   "name": "visuellverstehen/statamic-classify",
-  "description": "A Statamic addon to configure default styles wich will be set to Bard elements.",
+  "description": "A useful helper to add CSS classes to all of your HTML tags, created by the Bard editor.",
   "keywords": [
-    "Statamic",
-    "V3"
+    "statamic",
+    "v3",
+    "addon",
+    "bard"
   ],
   "license": "proprietary",
   "type": "statamic-addon",
@@ -27,8 +29,8 @@
   },
   "require": {
     "php": "^7.4",
-    "illuminate/support": "7.*",
-    "statamic/cms": "3.0.*"
+    "illuminate/support": "^7.0",
+    "statamic/cms": "^3.0"
   },
   "require-dev": {
     "orchestra/testbench": "^5.0",
@@ -41,7 +43,7 @@
   "extra": {
     "statamic": {
       "name": "Statamic-Classify",
-      "description": "A Statamic addon to configure default styles wich will be set to Bard elements."
+      "description": "A useful helper to add CSS classes to all of your HTML tags, created by the Bard editor."
     },
     "laravel": {
       "providers": [
