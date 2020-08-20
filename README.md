@@ -28,7 +28,16 @@ In that case, Classify will be your friend.
 - PHP >= 7.4
 
 ## Install addon
-1. Install Classify from the `Tools > Addons` section of your control panel, or via composer:
+
+There are two ways to install the Classify addon.
+
+### Control panel
+
+Install Classify from the `Tools > Addons` section of your control panel.
+
+### Composer
+
+Install Classify via composer:
 
 ```bash
 composer require visuellverstehen/statamic-classify
