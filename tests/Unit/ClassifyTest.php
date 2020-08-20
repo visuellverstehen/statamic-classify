@@ -8,10 +8,7 @@ use VV\Classify\Tests\TestCase;
 
 class ClassifyTest extends TestCase
 {
-    /**
-     * @var Classify
-     */
-    protected $classify;
+    protected Classify $classify;
 
     public function setUp(): void
     {
@@ -26,21 +23,15 @@ class ClassifyTest extends TestCase
         Config::set('classify', $config);
 
         $this->classify = new Classify();
-
-
     }
 
     /** @test */
-    public function test()
+    public function a_tag_will_be_extended_with_the_given_class_names()
     {
-        $value = '<h1> Hello world</h1>';
-        $params = [];
-        $context = [];
+        $bardInput = '<h1>Hello world</h1>';
 
-        $classified = $this->classify->index($value, $params, $context);
+        $classified = $this->classify->index($bardInput, [], []);
 
-        $expectedClassifiedString = '<h1 class="headline"> Hello world</h1>';
-
-        $this->assertEquals($classified, $expectedClassifiedString);
+        $this->assertEquals('<h1 class="headline">Hello world</h1>', $classified);
     }
 }
