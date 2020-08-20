@@ -19,8 +19,15 @@ Would you like to add some classes to different HTML tags?
 
 In that case, Classify will be your friend.
 
-## Installation
+# Installation
 
+## Requirements
+
+- Statamic v3
+- Laravel 7
+- PHP >= 7.4
+
+## Install addon
 1. Install Classify from the `Tools > Addons` section of your control panel, or via composer:
 
 ```bash
