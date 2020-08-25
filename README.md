@@ -1,5 +1,5 @@
-![Statamic 3.0+](https://img.shields.io/badge/Statamic-3.0+-FF269E?style=for-the-badge&link=https://statamic.com)
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/visuellverstehen/statamic-classify.svg?style=for-the-badge)](https://packagist.org/packages/jonassiewertsen/statamic-butik)
+[![Statamic 3.0+](https://img.shields.io/badge/Statamic-3.0+-FF269E?style=for-the-badge&link=https://statamic.com)](https://statamic.com/addons/visuellverstehen/classify)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/visuellverstehen/statamic-classify.svg?style=for-the-badge)](https://packagist.org/packages/visuellverstehen/statamic-classify)
 
 # Classify
 Classify is a useful helper to add CSS classes to all of your HTML tags, created by the [Bard](https://statamic.dev/fieldtypes/bard) editor. 
