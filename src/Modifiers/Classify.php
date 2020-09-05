@@ -36,7 +36,7 @@ class Classify extends Modifier
      */
     private function tagFilter(string $tag): string
     {
-        return '<' . $tag . '>';
+        return "<{$tag}";
     }
 
     /**
@@ -48,7 +48,7 @@ class Classify extends Modifier
      */
     private function replaceTag(string $tag, string $class): string
     {
-        return '<' . $tag . ' class="' . $class . '">';
+        return "<{$tag} class=\"{$class}\"";
     }
 
     /**

@@ -17,6 +17,7 @@ class ClassifyTest extends TestCase
         $config = [
             'default'  => [
                 'h1' => 'headline',
+                'a'  => 'link'
             ],
         ];
 
@@ -26,12 +27,22 @@ class ClassifyTest extends TestCase
     }
 
     /** @test */
-    public function a_tag_will_be_extended_with_the_given_class_names()
+    public function a_single_tag_will_be_extended_with_the_given_class_names()
     {
         $bardInput = '<h1>Hello world</h1>';
 
         $classified = $this->classify->index($bardInput, [], []);
 
         $this->assertEquals('<h1 class="headline">Hello world</h1>', $classified);
+    }
+
+    /** @test */
+    public function a_singletag_will_be_extended_with_the_given_class_names()
+    {
+        $bardInput = '<a href="#">Link</a>';
+
+        $classified = $this->classify->index($bardInput, [], []);
+
+        $this->assertEquals('<a class="link" href="#">Link</a>', $classified);
     }
 }
