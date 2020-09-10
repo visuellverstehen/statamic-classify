@@ -80,3 +80,8 @@ If you want to add multiple style sets, define those in the config file. For exa
 # License
 The MIT License (MIT). Please take a look at our [License File](LICENSE.md) for more information.
 
+# More about us
+- [www.statamic-agency.com](https://statamic-agency.com)
+- [www.visuellverstehen.de](https://visuellverstehen.de)
+
+
