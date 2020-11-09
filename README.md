@@ -24,8 +24,15 @@ In that case, Classify will be your friend.
 ## Requirements
 
 - Statamic v3
-- Laravel 7
+- Laravel 8
 - PHP >= 7.4
+
+### Version Compatibility
+
+ Laravel  | Classify
+:---------|:----------
+ ^7.0     | ^1.0
+ ^8.0     | ^2.0
 
 ## Install addon
 
