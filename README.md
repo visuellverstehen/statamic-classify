@@ -29,10 +29,10 @@ In that case, Classify will be your friend.
 
 ### Version Compatibility
 
- Laravel  | Classify
-:---------|:----------
- ^7.0     | ^1.0
- ^8.0     | ^2.0
+| Classify  | Statamic | Laravel
+|:----------|:---------|:---------
+| ^1.0      |  3.0     |  ^7.0 
+| ^2.0      |  3.0     |  ^8.0   
 
 ## Install addon
 
