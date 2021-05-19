@@ -7,8 +7,10 @@ use Statamic\Modifiers\Modifier;
 class Classify extends Modifier
 {
     /**
-     * If only {{ classify }} is provided the default styleset will be aplied.
-     * If a specific styleset {{ classify:foo}} is provided this will be aplied but if it dosn't exist the value will be returnd without changes.
+     * If only {{ classify }} is provided the default styleset will be applied.
+     *
+     * You can define a specified styleset as well by defining {{ classify:foo }}
+     * In case the set can not be found, the original value will get returned.
      */
     public function index($value, $params, $context)
     {
@@ -30,9 +32,6 @@ class Classify extends Modifier
 
     /**
      * Build string wich should be replaced.
-     *
-     * @param string $tag
-     * @return string
      */
     private function tagFilter(string $tag): string
     {
@@ -41,10 +40,6 @@ class Classify extends Modifier
 
     /**
      * Replace filtered tag and add css classes.
-     *
-     * @param string $tag
-     * @param string $class
-     * @return string
      */
     private function replaceTag(string $tag, string $class): string
     {
@@ -53,16 +48,9 @@ class Classify extends Modifier
 
     /**
      * Check if the given styleset is available in the config.
-     *
-     * @param string $styleset
-     * @return bool
      */
     private function isStylesetAvailable(string $styleset): bool
     {
-        if (! config()->has('classify.'.$styleset)) {
-            return false;
-        }
-
-        return true;
+        return config()->has('classify.' . $styleset);
     }
 }
