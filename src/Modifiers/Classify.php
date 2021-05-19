@@ -24,8 +24,8 @@ class Classify extends Modifier
         // The styleset wich will be applied.
         $styleSegments = config('classify.'.$styleset);
 
-        foreach ($styleSegments as $tag => $class) {
-            $value = app(ClassifyParser::class)->parse($tag, $class, $value);
+        foreach ($styleSegments as $tags => $classes) {
+            $value = app(ClassifyParser::class)->parse($tags, $classes, $value);
         }
 
         return $value;

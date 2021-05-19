@@ -4,9 +4,13 @@ namespace VV\Classify;
 
 class HtmlParser implements ClassifyParser
 {
-    public function parse(string $tag, string $class, string $value): string
+    public function parse(string $tags, string $classes, string $value): string
     {
-        return str_replace($this->tagFilter($tag), $this->replaceTag($tag, $class), $value);
+        if ($this->isSingleTag($tags)) {
+            return str_replace($this->tagFilter($tags), $this->replaceTag($tags, $classes), $value);
+        }
+
+        return $value;
     }
 
     /**
@@ -23,5 +27,10 @@ class HtmlParser implements ClassifyParser
     private function replaceTag(string $tag, string $class): string
     {
         return "<{$tag} class=\"{$class}\"";
+    }
+
+    private function isSingleTag(string $tags): bool
+    {
+        return count(explode(' ', $tags)) === 1;
     }
 }

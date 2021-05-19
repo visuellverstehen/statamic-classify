@@ -18,6 +18,8 @@ class ClassifyTest extends TestCase
             'default'  => [
                 'h1' => 'headline',
                 'a'  => 'link',
+                'p' => 'text-base',
+                'li p' => 'text-sm',
             ],
         ];
 
@@ -44,5 +46,23 @@ class ClassifyTest extends TestCase
         $classified = $this->classify->index($bardInput, [], []);
 
         $this->assertEquals('<a class="link" href="#">Link</a>', $classified);
+    }
+
+    /** @test */
+    public function a_nested_tag_will_be_recognized()
+    {
+        $config = [
+            'default'  => [
+                'li p' => 'text-sm',
+            ],
+        ];
+
+        Config::set('classify', $config);
+
+        $bardInput = '<li><p>Some text</p>';
+
+        $classified = $this->classify->index($bardInput, [], []);
+
+        $this->assertEquals('<li><p>Some text</p>><p class="text-sm">Some text</p>', $classified);
     }
 }
