@@ -36,6 +36,6 @@ class Classify extends Modifier
      */
     private function isStylesetAvailable(string $styleset): bool
     {
-        return config()->has('classify.' . $styleset);
+        return config()->has('classify.'.$styleset);
     }
 }
