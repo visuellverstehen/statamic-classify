@@ -19,7 +19,7 @@ class Classify extends Modifier
         }
 
         // The styleset wich will be applied.
-        $styleSegments = config('classify.' . $styleset);
+        $styleSegments = config('classify.'.$styleset);
 
         foreach ($styleSegments as $tag => $class) {
             $value = str_replace($this->tagFilter($tag), $this->replaceTag($tag, $class), $value);
@@ -55,11 +55,11 @@ class Classify extends Modifier
      * Check if the given styleset is available in the config.
      *
      * @param string $styleset
-     * @return boolean
+     * @return bool
      */
     private function isStylesetAvailable(string $styleset): bool
     {
-        if (!config()->has('classify.' . $styleset)) {
+        if (! config()->has('classify.'.$styleset)) {
             return false;
         }
 
