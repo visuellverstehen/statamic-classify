@@ -14,12 +14,12 @@ class Classify extends Modifier
     {
         $styleset = $params[0] ?? 'default';
 
-        if (! $this->isStylesetAvailable($styleset)) {
+        if (!$this->isStylesetAvailable($styleset)) {
             return $value;
         }
 
         // The styleset wich will be applied.
-        $styleSegments = config('classify.' . $styleset);
+        $styleSegments = config('classify.'.$styleset);
 
         foreach ($styleSegments as $tag => $class) {
             $value = str_replace($this->tagFilter($tag), $this->replaceTag($tag, $class), $value);
@@ -32,6 +32,7 @@ class Classify extends Modifier
      * Build string wich should be replaced.
      *
      * @param string $tag
+     *
      * @return string
      */
     private function tagFilter(string $tag): string
@@ -44,6 +45,7 @@ class Classify extends Modifier
      *
      * @param string $tag
      * @param string $class
+     *
      * @return string
      */
     private function replaceTag(string $tag, string $class): string
@@ -55,11 +57,12 @@ class Classify extends Modifier
      * Check if the given styleset is available in the config.
      *
      * @param string $styleset
-     * @return boolean
+     *
+     * @return bool
      */
     private function isStylesetAvailable(string $styleset): bool
     {
-        if (!config()->has('classify.' . $styleset)) {
+        if (!config()->has('classify.'.$styleset)) {
             return false;
         }
 

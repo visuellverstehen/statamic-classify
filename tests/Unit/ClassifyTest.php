@@ -17,7 +17,7 @@ class ClassifyTest extends TestCase
         $config = [
             'default'  => [
                 'h1' => 'headline',
-                'a'  => 'link'
+                'a'  => 'link',
             ],
         ];
 

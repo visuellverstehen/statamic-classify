@@ -24,8 +24,10 @@ class TestCase extends OrchestraTestCase
     }
 
     /**
-     * Load package service provider
+     * Load package service provider.
+     *
      * @param \Illuminate\Foundation\Application $app
+     *
      * @return array
      */
     protected function getPackageProviders($app)
@@ -37,8 +39,10 @@ class TestCase extends OrchestraTestCase
     }
 
     /**
-     * Load package alias
+     * Load package alias.
+     *
      * @param \Illuminate\Foundation\Application $app
+     *
      * @return array
      */
     protected function getPackageAliases($app)
@@ -49,7 +53,8 @@ class TestCase extends OrchestraTestCase
     }
 
     /**
-     * Load Environment
+     * Load Environment.
+     *
      * @param \Illuminate\Foundation\Application $app
      */
     protected function getEnvironmentSetUp($app)
@@ -65,7 +70,8 @@ class TestCase extends OrchestraTestCase
     }
 
     /**
-     * Resolve the Application Configuration and set the Statamic configuration
+     * Resolve the Application Configuration and set the Statamic configuration.
+     *
      * @param \Illuminate\Foundation\Application $app
      */
     protected function resolveApplicationConfiguration($app)
@@ -78,7 +84,7 @@ class TestCase extends OrchestraTestCase
         ];
 
         foreach ($configs as $config) {
-            $app['config']->set("statamic.$config", require(__DIR__ . "/../vendor/statamic/cms/config/{$config}.php"));
+            $app['config']->set("statamic.$config", require(__DIR__."/../vendor/statamic/cms/config/{$config}.php"));
         }
 
         // Setting the user repository to the default flat file system

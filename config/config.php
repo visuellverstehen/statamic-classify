@@ -15,7 +15,7 @@ return [
     'default' => [
         'h1' => 'headline',
         'a'  => 'link',
-        'p' => 'paragraph',
+        'p'  => 'paragraph',
     ],
 
     // 'blog' => [

@@ -15,11 +15,11 @@ class ServiceProvider extends AddonServiceProvider
     {
         parent::boot();
 
-        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'classify');
+        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'classify');
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/config.php' => config_path('classify.php'),
+                __DIR__.'/../config/config.php' => config_path('classify.php'),
             ], 'classify');
         }
 
@@ -29,7 +29,7 @@ class ServiceProvider extends AddonServiceProvider
     private function publishConfigFile()
     {
         Statamic::afterInstalled(function ($command) {
-            $command->call('vendor:publish', ['--tag' => 'classify',]);
+            $command->call('vendor:publish', ['--tag' => 'classify']);
         });
     }
 }
