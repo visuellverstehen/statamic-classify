@@ -3,6 +3,7 @@
 namespace VV\Classify\Modifiers;
 
 use Statamic\Modifiers\Modifier;
+use VV\Classify\ClassifyParser;
 
 class Classify extends Modifier
 {
@@ -24,26 +25,10 @@ class Classify extends Modifier
         $styleSegments = config('classify.'.$styleset);
 
         foreach ($styleSegments as $tag => $class) {
-            $value = str_replace($this->tagFilter($tag), $this->replaceTag($tag, $class), $value);
+            $value = app(ClassifyParser::class)->parse($tag, $class, $value);
         }
 
         return $value;
-    }
-
-    /**
-     * Build string wich should be replaced.
-     */
-    private function tagFilter(string $tag): string
-    {
-        return "<{$tag}";
-    }
-
-    /**
-     * Replace filtered tag and add css classes.
-     */
-    private function replaceTag(string $tag, string $class): string
-    {
-        return "<{$tag} class=\"{$class}\"";
     }
 
     /**

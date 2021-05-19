@@ -23,11 +23,8 @@ class ServiceProvider extends AddonServiceProvider
             ], 'classify');
         }
 
-        $this->publishConfigFile();
-    }
+        $this->app->singleton(ClassifyParser::class, HtmlParser::class);
 
-    private function publishConfigFile()
-    {
         Statamic::afterInstalled(function ($command) {
             $command->call('vendor:publish', ['--tag' => 'classify']);
         });
