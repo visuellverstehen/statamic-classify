@@ -6,31 +6,34 @@ class HtmlParser implements ClassifyParser
 {
     public function parse(string $tags, string $classes, string $value): string
     {
-        if ($this->isSingleTag($tags)) {
-            return str_replace($this->tagFilter($tags), $this->replaceTag($tags, $classes), $value);
+        $tags = explode(' ', $tags);
+        $last = $this->getLastTagAndRemove($tags);
+
+        return preg_replace(
+            $this->defineRegexPattern($tags, $last),
+            $this->defineReplacement($classes, $last),
+            $value
+        );
+    }
+
+    private function getLastTagAndRemove(array &$tags): string
+    {
+        return array_splice($tags, array_key_last($tags))[0];
+    }
+
+    private function defineRegexPattern(array $tags, string $last): string
+    {
+        $pattern = '';
+
+        foreach ($tags as $tag) {
+            $pattern .= "<{$tag}[^>]*>[^<]*";
         }
 
-        return $value;
+        return "/({$pattern})(<{$last})/iU";
     }
 
-    /**
-     * Build string wich should be replaced.
-     */
-    private function tagFilter(string $tag): string
+    private function defineReplacement(string $classes, string $last): string
     {
-        return "<{$tag}";
-    }
-
-    /**
-     * Replace filtered tag and add css classes.
-     */
-    private function replaceTag(string $tag, string $class): string
-    {
-        return "<{$tag} class=\"{$class}\"";
-    }
-
-    private function isSingleTag(string $tags): bool
-    {
-        return count(explode(' ', $tags)) === 1;
+        return "$1<{$last} class=\"{$classes}\"";
     }
 }

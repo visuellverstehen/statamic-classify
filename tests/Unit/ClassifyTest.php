@@ -59,10 +59,76 @@ class ClassifyTest extends TestCase
 
         Config::set('classify', $config);
 
-        $bardInput = '<li><p>Some text</p>';
+        $bardInput = '<li><p>Some text</p></li>';
 
         $classified = $this->classify->index($bardInput, [], []);
 
-        $this->assertEquals('<li><p>Some text</p>><p class="text-sm">Some text</p>', $classified);
+        $this->assertEquals('<li><p class="text-sm">Some text</p></li>', $classified);
+    }
+
+
+    /** @test */
+    public function a_nested_tag_with_text_inbetween_will_be_recognized()
+    {
+        $config = [
+            'default'  => [
+                'a span' => 'text-red',
+            ],
+        ];
+
+        Config::set('classify', $config);
+
+        $bardInput = '<a>Some <span>styled</span> text</a>';
+
+        $classified = $this->classify->index($bardInput, [], []);
+
+        $this->assertEquals('<a>Some <span class="text-red">styled</span> text</a>', $classified);
+    }
+
+    /** @test */
+    public function a_nested_tag_with_text_inbetween_will_be_recognized_on_multilines_as_well()
+    {
+        $config = [
+            'default'  => [
+                'li p' => 'text-bold',
+            ],
+        ];
+
+        Config::set('classify', $config);
+
+        $bardInput = <<<EOT
+                     <li>Bad formatted HTML
+                        <p>Some more</p>
+                     </li>
+                     EOT;
+
+        $expedtedOutput = <<<EOT
+                          <li>Bad formatted HTML
+                             <p class="text-bold">Some more</p>
+                          </li>
+                          EOT;
+
+
+        $classified = $this->classify->index($bardInput, [], []);
+
+        $this->assertEquals($expedtedOutput, $classified);
+    }
+
+    /** @test */
+    public function a_nested_tag_with_already_defined_classes_will_be_parsed_correctly()
+    {
+        $config = [
+            'default'  => [
+                'a span' => 'text-red',
+            ],
+        ];
+
+        Config::set('classify', $config);
+
+        $bardInput = '<a href="#">Some<span>thing</span></a>';
+
+        $classified = $this->classify->index($bardInput, [], []);
+
+        $this->assertEquals('<a href="#">Some<span class="text-red">thing</span></a>', $classified);
     }
 }
