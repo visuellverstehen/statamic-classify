@@ -4,36 +4,28 @@ namespace VV\Classify;
 
 class HtmlParser implements ClassifyParser
 {
-    public function parse(string $tags, string $classes, string $value): string
+    public function parse(Tag $tag, string $value): string
     {
-        $tags = explode(' ', $tags);
-        $last = $this->getLastTagAndRemove($tags);
-
         return preg_replace(
-            $this->defineRegexPattern($tags, $last),
-            $this->defineReplacement($classes, $last),
+            $this->defineRegexPattern($tag),
+            $this->defineReplacement($tag),
             $value
         );
     }
 
-    private function getLastTagAndRemove(array &$tags): string
-    {
-        return array_splice($tags, array_key_last($tags))[0];
-    }
-
-    private function defineRegexPattern(array $tags, string $last): string
+    private function defineRegexPattern(Tag $tag): string
     {
         $pattern = '';
 
-        foreach ($tags as $tag) {
-            $pattern .= "<{$tag}[^>]*>[^<]*";
+        foreach ($tag->before as $name) {
+            $pattern .= "<{$name}[^>]*>[^<]*";
         }
 
-        return "/({$pattern})(<{$last})/iU";
+        return "/({$pattern})(<{$tag->tag})(?! class)/iU";
     }
 
-    private function defineReplacement(string $classes, string $last): string
+    private function defineReplacement(Tag $tag): string
     {
-        return "$1<{$last} class=\"{$classes}\"";
+        return "$1<{$tag->tag} class=\"{$tag->classes}\"";
     }
 }

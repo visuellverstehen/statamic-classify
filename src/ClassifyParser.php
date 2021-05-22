@@ -4,5 +4,5 @@ namespace VV\Classify;
 
 interface ClassifyParser
 {
-    public function parse(string $tags, string $classes, string $value): string;
+    public function parse(Tag $tag, string $value): string;
 }

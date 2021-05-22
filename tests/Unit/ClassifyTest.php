@@ -131,4 +131,38 @@ class ClassifyTest extends TestCase
 
         $this->assertEquals('<a href="#">Some<span class="text-red">thing</span></a>', $classified);
     }
+
+    /** @test */
+    public function a_nested_tag_will_be_replaced_and_wont_be_overwritten()
+    {
+        $config = [
+            'default'  => [
+                'p' => 'single',
+                'li p' => 'nested',
+            ],
+        ];
+
+        Config::set('classify', $config);
+
+        $bardInput = <<<EOT
+                     <li>
+                        <p>I am nested</p>
+                     </li>
+                     
+                     <p>I am not</p>
+                     EOT;
+
+        $expedtedOutput = <<<EOT
+                          <li>
+                             <p class="nested">I am nested</p>
+                          </li>
+                          
+                          <p class="single">I am not</p>
+                          EOT;
+
+
+        $classified = $this->classify->index($bardInput, [], []);
+
+        $this->assertEquals($expedtedOutput, $classified);
+    }
 }

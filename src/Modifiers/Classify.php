@@ -4,38 +4,52 @@ namespace VV\Classify\Modifiers;
 
 use Statamic\Modifiers\Modifier;
 use VV\Classify\ClassifyParser;
+use VV\Classify\Tag;
 
 class Classify extends Modifier
 {
     /**
-     * If only {{ classify }} is provided the default styleset will be applied.
+     * If only {{ classify }} is provided, the default style set will be applied.
      *
      * You can define a specified styleset as well by defining {{ classify:foo }}
      * In case the set can not be found, the original value will get returned.
      */
     public function index($value, $params, $context)
     {
-        $styleset = $params[0] ?? 'default';
+        $styleSet = $params[0] ?? 'default';
 
-        if (! $this->isStylesetAvailable($styleset)) {
+        if (! $this->isStyleSetAvailable($styleSet)) {
             return $value;
         }
 
-        // The styleset wich will be applied.
-        $styleSegments = config('classify.'.$styleset);
+        /*
+         * Convert style segment information into the Tag class.
+         * They will get Sorted by count to parse nested tags first.
+         */
+        $segments = collect($this->getStyleSegments($styleSet))
+            ->map(fn ($classes, $tags) => new Tag($tags, $classes))
+            ->sortByDesc('count');
 
-        foreach ($styleSegments as $tags => $classes) {
-            $value = app(ClassifyParser::class)->parse($tags, $classes, $value);
-        }
+        $segments->each(function($segment) use (&$value) {
+            $value = app(ClassifyParser::class)->parse($segment, $value);
+        });
 
         return $value;
     }
 
     /**
-     * Check if the given styleset is available in the config.
+     * Check if the given style set is available in the config.
      */
-    private function isStylesetAvailable(string $styleset): bool
+    private function isStyleSetAvailable(string $styleSet): bool
     {
-        return config()->has('classify.'.$styleset);
+        return config()->has('classify.'.$styleSet);
+    }
+
+    /*
+     * get the style set from the config.
+     */
+    private function getStyleSegments($styleSet): array
+    {
+        return config('classify.'.$styleSet);
     }
 }
