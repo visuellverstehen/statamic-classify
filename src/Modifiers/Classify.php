@@ -30,7 +30,7 @@ class Classify extends Modifier
             ->map(fn ($classes, $tags) => new Tag($tags, $classes))
             ->sortByDesc('count');
 
-        $segments->each(function($segment) use (&$value) {
+        $segments->each(function ($segment) use (&$value) {
             $value = app(ClassifyParser::class)->parse($segment, $value);
         });
 
