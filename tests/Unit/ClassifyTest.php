@@ -66,7 +66,6 @@ class ClassifyTest extends TestCase
         $this->assertEquals('<li><p class="text-sm">Some text</p></li>', $classified);
     }
 
-
     /** @test */
     public function a_nested_tag_with_text_inbetween_will_be_recognized()
     {
@@ -107,7 +106,6 @@ class ClassifyTest extends TestCase
                              <p class="text-bold">Some more</p>
                           </li>
                           EOT;
-
 
         $classified = $this->classify->index($bardInput, [], []);
 
@@ -159,7 +157,6 @@ class ClassifyTest extends TestCase
                           
                           <p class="single">I am not</p>
                           EOT;
-
 
         $classified = $this->classify->index($bardInput, [], []);
 

@@ -32,7 +32,6 @@ class Tag
         $this->count = count($tags);
         $this->classes = $classes;
         $this->setTags($tags);
-
     }
 
     /*
