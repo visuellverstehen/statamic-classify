@@ -26,7 +26,8 @@ class Tag
      */
     public int $count;
 
-    public function __construct(string $tags, string $classes) {
+    public function __construct(string $tags, string $classes)
+    {
         $tags = $this->convertTagsToArray($tags);
         $this->count = count($tags);
         $this->classes = $classes;

@@ -96,13 +96,13 @@ class ClassifyTest extends TestCase
 
         Config::set('classify', $config);
 
-        $bardInput = <<<EOT
+        $bardInput = <<<'EOT'
                      <li>Bad formatted HTML
                         <p>Some more</p>
                      </li>
                      EOT;
 
-        $expedtedOutput = <<<EOT
+        $expedtedOutput = <<<'EOT'
                           <li>Bad formatted HTML
                              <p class="text-bold">Some more</p>
                           </li>
@@ -144,7 +144,7 @@ class ClassifyTest extends TestCase
 
         Config::set('classify', $config);
 
-        $bardInput = <<<EOT
+        $bardInput = <<<'EOT'
                      <li>
                         <p>I am nested</p>
                      </li>
@@ -152,7 +152,7 @@ class ClassifyTest extends TestCase
                      <p>I am not</p>
                      EOT;
 
-        $expedtedOutput = <<<EOT
+        $expedtedOutput = <<<'EOT'
                           <li>
                              <p class="nested">I am nested</p>
                           </li>
