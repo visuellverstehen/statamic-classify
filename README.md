@@ -53,7 +53,7 @@ To add or change style sets, simply add or change an array with classes that sho
     'li p' => 'mb-2 ml-4',
 ],
 ```
-*This example uses TailwindCSS, but you can use whater kind of CSS you want.*
+*This example uses TailwindCSS, but you can use whatever kind of CSS you want.*
 
 ### Example Output
 ```html
