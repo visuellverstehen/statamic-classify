@@ -94,7 +94,7 @@ If you want to add multiple style sets, define those in the config file. For exa
 ## Nested selectors (min version 2.2)
 You can nest your selectors to flexible style elements in different contexts. 
 
-let's assume you want to style links inside lists differenlty than a general link, you can make use of nesting:
+Let's assume you want to style links inside lists differently than a general link, you can make use of nesting:
 ```php
 `ul li p a` => 'my-secial-css-class-for-nested-links-in-lists`,
 `a` => `a-general-link-class`,
