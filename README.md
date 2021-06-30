@@ -2,22 +2,7 @@
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/visuellverstehen/statamic-classify.svg?style=for-the-badge)](https://packagist.org/packages/visuellverstehen/statamic-classify)
 
 # Classify
-Classify is a useful helper to add CSS classes to all of your HTML tags, created by the [Bard](https://statamic.dev/fieldtypes/bard) editor. 
-
-## What it does
-Bards default output would be:
-```html
-<h1>A nice headline</h1>
-<p>Something really <a href="#">important</a></p>
-```
-
-Would you like to add some classes to different HTML tags?
-```html
-<h1 class="text-2xl">A nice headline</h1>
-<p>Something really <a class="link hover:blue" href="#">important</a></p>
-```
-
-In that case, Classify will be your friend.
+Classify is a useful helper to add CSS classes to your HTML tags, created by the Statamic 3 [Bard](https://statamic.dev/fieldtypes/bard) editor. 
 
 # Installation
 
@@ -34,8 +19,9 @@ In that case, Classify will be your friend.
 | ^1.0      |  3.0     |  ^7.0
 | ^2.0      |  3.0     |  ^8.0
 | ^2.1      |  3.1     |  ^8.0
+| ^2.2      |  3.1     |  ^8.0
 
-## Install addon
+## Installation
 
 There are two ways to install the Classify addon.
 
@@ -61,9 +47,26 @@ The installation process will automatically publish the `classify.php` file into
 To add or change style sets, simply add or change an array with classes that should be added to the HTML tag.
 ```php
 'default' => [
-        'h1' => 'text-2xl',
-        'a'  => 'link hover:blue',
-    ],
+    'h1' => 'text-2xl',
+    'a'  => 'link hover:text-blue',
+    'p' => 'mb-5',
+    'li p' => 'mb-2 ml-4',
+],
+```
+*This example uses TailwindCSS, but you can use whatever kind of CSS you want.*
+
+### Example Output
+```html
+<h1 class="text-2xl">A headline</h1>
+<p class="mb-5">Some text</p>
+
+<ul>
+    <li><p class="mb-2 ml-4">A list item</p></li>
+    <li><p class="mb-2 ml-4">A list item</p></li>
+    <li><p class="mb-2 ml-4"><a class="link hover:text-blue" href="#">Klick me</a></p></li>
+</ul>
+
+<p class="mb-5">Another text</p>
 ```
 
 ### Usage
@@ -75,15 +78,30 @@ If you want to use the default style set, use the `classify` modifier.
 
 If you want to add multiple style sets, define those in the config file. For example:
 ```php
-// config
+'default' => [
+    // 
+],
 'blog' => [
-    'button' => 'button button--blue',
-    'a'  => 'link',
+    'a'  => 'link hover:underline',
+    'li p' => 'ml-3 font-bold',
+    'p' => 'mb-5',
 ],
 
 // Antlers view
 {{ bard_text | classify:blog }}
 ```
+
+## Nested selectors (min version 2.2)
+You can nest your selectors to flexible style elements in different contexts. 
+
+Let's assume you want to style links inside lists differently than a general link, you can make use of nesting:
+```php
+`ul li p a` => 'my-secial-css-class-for-nested-links-in-lists`,
+`a` => `a-general-link-class`,
+```
+
+The ordering does not matter. Classify will take care of that for you.
+
 
 # More about us
 - [www.statamic-agency.com](https://statamic-agency.com)

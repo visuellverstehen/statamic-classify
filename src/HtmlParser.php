@@ -4,24 +4,28 @@ namespace VV\Classify;
 
 class HtmlParser implements ClassifyParser
 {
-    public function parse(string $tag, string $class, string $value): string
+    public function parse(Tag $tag, string $value): string
     {
-        return str_replace($this->tagFilter($tag), $this->replaceTag($tag, $class), $value);
+        return preg_replace(
+            $this->defineRegexPattern($tag),
+            $this->defineReplacement($tag),
+            $value
+        );
     }
 
-    /**
-     * Build string wich should be replaced.
-     */
-    private function tagFilter(string $tag): string
+    private function defineRegexPattern(Tag $tag): string
     {
-        return "<{$tag}";
+        $pattern = '';
+
+        foreach ($tag->before as $name) {
+            $pattern .= "<{$name}[^>]*>[^<]*";
+        }
+
+        return "/({$pattern})(<{$tag->tag})(?! class)/iU";
     }
 
-    /**
-     * Replace filtered tag and add css classes.
-     */
-    private function replaceTag(string $tag, string $class): string
+    private function defineReplacement(Tag $tag): string
     {
-        return "<{$tag} class=\"{$class}\"";
+        return "$1<{$tag->tag} class=\"{$tag->classes}\"";
     }
 }

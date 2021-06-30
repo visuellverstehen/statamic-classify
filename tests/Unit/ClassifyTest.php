@@ -18,6 +18,8 @@ class ClassifyTest extends TestCase
             'default'  => [
                 'h1' => 'headline',
                 'a'  => 'link',
+                'p' => 'text-base',
+                'li p' => 'text-sm',
             ],
         ];
 
@@ -44,5 +46,120 @@ class ClassifyTest extends TestCase
         $classified = $this->classify->index($bardInput, [], []);
 
         $this->assertEquals('<a class="link" href="#">Link</a>', $classified);
+    }
+
+    /** @test */
+    public function a_nested_tag_will_be_recognized()
+    {
+        $config = [
+            'default'  => [
+                'li p' => 'text-sm',
+            ],
+        ];
+
+        Config::set('classify', $config);
+
+        $bardInput = '<li><p>Some text</p></li>';
+
+        $classified = $this->classify->index($bardInput, [], []);
+
+        $this->assertEquals('<li><p class="text-sm">Some text</p></li>', $classified);
+    }
+
+    /** @test */
+    public function a_nested_tag_with_text_inbetween_will_be_recognized()
+    {
+        $config = [
+            'default'  => [
+                'a span' => 'text-red',
+            ],
+        ];
+
+        Config::set('classify', $config);
+
+        $bardInput = '<a>Some <span>styled</span> text</a>';
+
+        $classified = $this->classify->index($bardInput, [], []);
+
+        $this->assertEquals('<a>Some <span class="text-red">styled</span> text</a>', $classified);
+    }
+
+    /** @test */
+    public function a_nested_tag_with_text_inbetween_will_be_recognized_on_multilines_as_well()
+    {
+        $config = [
+            'default'  => [
+                'li p' => 'text-bold',
+            ],
+        ];
+
+        Config::set('classify', $config);
+
+        $bardInput = <<<'EOT'
+                     <li>Bad formatted HTML
+                        <p>Some more</p>
+                     </li>
+                     EOT;
+
+        $expedtedOutput = <<<'EOT'
+                          <li>Bad formatted HTML
+                             <p class="text-bold">Some more</p>
+                          </li>
+                          EOT;
+
+        $classified = $this->classify->index($bardInput, [], []);
+
+        $this->assertEquals($expedtedOutput, $classified);
+    }
+
+    /** @test */
+    public function a_nested_tag_with_already_defined_classes_will_be_parsed_correctly()
+    {
+        $config = [
+            'default'  => [
+                'a span' => 'text-red',
+            ],
+        ];
+
+        Config::set('classify', $config);
+
+        $bardInput = '<a href="#">Some<span>thing</span></a>';
+
+        $classified = $this->classify->index($bardInput, [], []);
+
+        $this->assertEquals('<a href="#">Some<span class="text-red">thing</span></a>', $classified);
+    }
+
+    /** @test */
+    public function a_nested_tag_will_be_replaced_and_wont_be_overwritten()
+    {
+        $config = [
+            'default'  => [
+                'p' => 'single',
+                'li p' => 'nested',
+            ],
+        ];
+
+        Config::set('classify', $config);
+
+        $bardInput = <<<'EOT'
+                     <li>
+                        <p>I am nested</p>
+                     </li>
+                     
+                     <p>I am not</p>
+                     EOT;
+
+        $expedtedOutput = <<<'EOT'
+                          <li>
+                             <p class="nested">I am nested</p>
+                          </li>
+                          
+                          <p class="single">I am not</p>
+                          EOT;
+
+        $classified = $this->classify->index($bardInput, [], []);
+
+        $this->assertEquals($expedtedOutput, $classified);
     }
 }
