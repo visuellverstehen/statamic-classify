@@ -18,7 +18,7 @@ class Classify extends Modifier
     {
         $styleSet = $params[0] ?? 'default';
 
-        if (! $this->isStyleSetAvailable($styleSet)) {
+        if ((! $this->isStyleSetAvailable($styleSet)) || (null === $value)) {
             return $value;
         }
 
