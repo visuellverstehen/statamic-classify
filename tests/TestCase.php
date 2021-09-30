@@ -25,7 +25,8 @@ class TestCase extends OrchestraTestCase
 
     /**
      * Load package service provider.
-     * @param \Illuminate\Foundation\Application $app
+     *
+     * @param  \Illuminate\Foundation\Application  $app
      * @return array
      */
     protected function getPackageProviders($app)
@@ -38,7 +39,8 @@ class TestCase extends OrchestraTestCase
 
     /**
      * Load package alias.
-     * @param \Illuminate\Foundation\Application $app
+     *
+     * @param  \Illuminate\Foundation\Application  $app
      * @return array
      */
     protected function getPackageAliases($app)
@@ -50,7 +52,8 @@ class TestCase extends OrchestraTestCase
 
     /**
      * Load Environment.
-     * @param \Illuminate\Foundation\Application $app
+     *
+     * @param  \Illuminate\Foundation\Application  $app
      */
     protected function getEnvironmentSetUp($app)
     {
@@ -66,7 +69,8 @@ class TestCase extends OrchestraTestCase
 
     /**
      * Resolve the Application Configuration and set the Statamic configuration.
-     * @param \Illuminate\Foundation\Application $app
+     *
+     * @param  \Illuminate\Foundation\Application  $app
      */
     protected function resolveApplicationConfiguration($app)
     {
