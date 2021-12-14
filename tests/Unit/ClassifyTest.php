@@ -162,4 +162,37 @@ class ClassifyTest extends TestCase
 
         $this->assertEquals($expedtedOutput, $classified);
     }
+
+    /** @test */
+    public function all_list_items_will_be_assigned_to_a_class()
+    {
+        $config = [
+            'default'  => [
+                'ul' => 'parent',
+                'ul li' => 'nested',
+            ],
+        ];
+
+        Config::set('classify', $config);
+
+        $bardInput = <<<'EOT'
+                     <ul>
+                        <li>I am nested 1</li>
+                        <li>I am nested 2</li>
+                        <li>I am nested 3</li>
+                     </ul>
+                     EOT;
+
+        $expedtedOutput = <<<'EOT'
+                          <ul class="parent">
+                             <li class="nested">I am nested 1</li>
+                             <li class="nested">I am nested 2</li>
+                             <li class="nested">I am nested 3</li>
+                          </ul>
+                          EOT;
+
+        $classified = $this->classify->index($bardInput, [], []);
+
+        $this->assertEquals($expedtedOutput, $classified);
+    }
 }
