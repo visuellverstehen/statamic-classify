@@ -66,7 +66,7 @@ To add or change style sets, simply add or change an array with classes that sho
     <li><p class="mb-2 ml-4"><a class="link hover:text-blue" href="#">Klick me</a></p></li>
 </ul>
 
-<p class="mb-5">Another text</p>
+<p class="mb-5">another text</p>
 ```
 
 ### Usage
