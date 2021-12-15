@@ -45,7 +45,7 @@ class ClassifyTest extends TestCase
 
         $classified = $this->classify->index($bardInput, [], []);
 
-        $this->assertEquals('<a class="link" href="#">Link</a>', $classified);
+        $this->assertEquals('<a href="#" class="link">Link</a>', $classified);
     }
 
     /** @test */
@@ -161,5 +161,254 @@ class ClassifyTest extends TestCase
         $classified = $this->classify->index($bardInput, [], []);
 
         $this->assertEquals($expedtedOutput, $classified);
+    }
+
+    /** @test */
+    public function all_list_items_will_be_assigned_to_a_class()
+    {
+        $config = [
+            'default'  => [
+                'ul' => 'parent',
+                'ul li' => 'nested',
+            ],
+        ];
+
+        Config::set('classify', $config);
+
+        $bardInput = <<<'EOT'
+                     <ul>
+                        <li>I am nested 1</li>
+                        <li>I am nested 2</li>
+                        <li>I am nested 3</li>
+                     </ul>
+                     EOT;
+
+        $expedtedOutput = <<<'EOT'
+                          <ul class="parent">
+                             <li class="nested">I am nested 1</li>
+                             <li class="nested">I am nested 2</li>
+                             <li class="nested">I am nested 3</li>
+                          </ul>
+                          EOT;
+
+        $classified = $this->classify->index($bardInput, [], []);
+
+        $this->assertEquals($expedtedOutput, $classified);
+    }
+
+    /** @test */
+    public function deeply_nested_elements_can_be_targeted()
+    {
+        $config = [
+            'default'  => [
+                'a' => 'root-link',
+                'ul' => 'parent',
+                'ul li' => 'nested',
+                'ul li a' => 'first-nested-links',
+                'ul li ul' => 'nested-parent',
+                'ul li ul li' => 'nested-item',
+                'ul li ul li a' => 'deeply-nested-links',
+            ],
+        ];
+
+        Config::set('classify', $config);
+
+        $bardInput = <<<'EOT'
+ <a>Root link</a>
+ <ul>
+    <li><a>I am nested 1</a></li>
+    <li><a>I am nested 2</a></li>
+    <li><a>I am nested 3</a></li>
+    <li>
+        <ul>
+            <li><a>I am nested 2.1</a></li>
+            <li><a>I am nested 2.2</a></li>
+            <li><a>I am nested 2.3</a></li>
+        </ul>
+    </li>
+ </ul>
+ EOT;
+
+        $expedtedOutput = <<<'EOT'
+<a class="root-link">Root link</a>
+<ul class="parent">
+   <li class="nested"><a class="first-nested-links">I am nested 1</a></li>
+   <li class="nested"><a class="first-nested-links">I am nested 2</a></li>
+   <li class="nested"><a class="first-nested-links">I am nested 3</a></li>
+   <li class="nested">
+       <ul class="nested-parent">
+           <li class="nested-item"><a class="deeply-nested-links">I am nested 2.1</a></li>
+           <li class="nested-item"><a class="deeply-nested-links">I am nested 2.2</a></li>
+           <li class="nested-item"><a class="deeply-nested-links">I am nested 2.3</a></li>
+       </ul>
+   </li>
+</ul>
+EOT;
+
+        $classified = $this->classify->index($bardInput, [], []);
+
+        $this->assertEquals($expedtedOutput, $classified);
+    }
+
+    /** @test */
+    public function deeply_nested_elements_can_be_targeted_with_css_selectors()
+    {
+        $config = [
+            'default'  => [
+                'a' => 'root-link',
+                'ul' => 'parent',
+                'ul li' => 'nested',
+                'ul li:nth-child(2n+2)' => 'nested nested-even',
+                'ul li a' => 'first-nested-links',
+                'ul li ul' => 'nested-parent',
+                'ul li ul li' => 'nested-item',
+                'ul li ul li a' => 'deeply-nested-links',
+            ],
+        ];
+
+        Config::set('classify', $config);
+
+        $bardInput = <<<'EOT'
+ <a>Root link</a>
+ <ul>
+    <li><a>I am nested 1</a></li>
+    <li><a>I am nested 2</a></li>
+    <li><a>I am nested 3</a></li>
+    <li>
+        <ul>
+            <li><a>I am nested 2.1</a></li>
+            <li><a>I am nested 2.2</a></li>
+            <li><a>I am nested 2.3</a></li>
+        </ul>
+    </li>
+ </ul>
+ EOT;
+
+        $expedtedOutput = <<<'EOT'
+<a class="root-link">Root link</a>
+<ul class="parent">
+   <li class="nested"><a class="first-nested-links">I am nested 1</a></li>
+   <li class="nested nested-even"><a class="first-nested-links">I am nested 2</a></li>
+   <li class="nested"><a class="first-nested-links">I am nested 3</a></li>
+   <li class="nested nested-even">
+       <ul class="nested-parent">
+           <li class="nested-item"><a class="deeply-nested-links">I am nested 2.1</a></li>
+           <li class="nested-item"><a class="deeply-nested-links">I am nested 2.2</a></li>
+           <li class="nested-item"><a class="deeply-nested-links">I am nested 2.3</a></li>
+       </ul>
+   </li>
+</ul>
+EOT;
+
+        $classified = $this->classify->index($bardInput, [], []);
+
+        $this->assertEquals($expedtedOutput, $classified);
+    }
+
+    /** @test */
+    public function root_link_class_is_applied_to_all_but_first_list_item_links()
+    {
+        $config = [
+            'default'  => [
+                'a' => 'root-link',
+                'ul' => 'parent',
+                'ul li' => 'nested',
+                'ul li a' => 'first-nested-links',
+                'ul li ul' => 'nested-parent',
+                'ul li ul li' => 'nested-item',
+            ],
+        ];
+
+        Config::set('classify', $config);
+
+        $bardInput = <<<'EOT'
+ <a>Root link</a>
+ <ul>
+    <li><a>I am nested 1</a></li>
+    <li><a>I am nested 2</a></li>
+    <li><a>I am nested 3</a></li>
+    <li>
+        <ul>
+            <li><a>I am nested 2.1</a></li>
+            <li><a>I am nested 2.2</a></li>
+            <li><a>I am nested 2.3</a></li>
+        </ul>
+    </li>
+ </ul>
+ EOT;
+
+        $expedtedOutput = <<<'EOT'
+<a class="root-link">Root link</a>
+<ul class="parent">
+   <li class="nested"><a class="first-nested-links">I am nested 1</a></li>
+   <li class="nested"><a class="first-nested-links">I am nested 2</a></li>
+   <li class="nested"><a class="first-nested-links">I am nested 3</a></li>
+   <li class="nested">
+       <ul class="nested-parent">
+           <li class="nested-item"><a class="root-link">I am nested 2.1</a></li>
+           <li class="nested-item"><a class="root-link">I am nested 2.2</a></li>
+           <li class="nested-item"><a class="root-link">I am nested 2.3</a></li>
+       </ul>
+   </li>
+</ul>
+EOT;
+
+        $classified = $this->classify->index($bardInput, [], []);
+
+        $this->assertEquals($expedtedOutput, $classified);
+    }
+
+    /** @test */
+    public function adding_an_explicit_body_root_does_not_break_selectors()
+    {
+        $config = [
+            'default'  => [
+                'body a span' => 'text-red',
+            ],
+        ];
+
+        Config::set('classify', $config);
+
+        $bardInput = '<a href="#">Some<span>thing</span></a>';
+
+        $classified = $this->classify->index($bardInput, [], []);
+
+        $this->assertEquals('<a href="#">Some<span class="text-red">thing</span></a>', $classified);
+    }
+
+    /** @test */
+    public function adding_excessive_whitespace_produces_compatible_selectors()
+    {
+        $config = [
+            'default'  => [
+                '   a       span    ' => 'text-red',
+            ],
+        ];
+
+        Config::set('classify', $config);
+
+        $bardInput = '<a href="#">Some<span>thing</span></a>';
+
+        $classified = $this->classify->index($bardInput, [], []);
+
+        $this->assertEquals('<a href="#">Some<span class="text-red">thing</span></a>', $classified);
+    }
+
+    /** @test */
+    public function adding_explicit_greater_than_symbols_doesnt_double_up_internal_selectors()
+    {
+        $config = [
+            'default'  => [
+                ' body >    a>span    ' => 'text-red',
+            ],
+        ];
+
+        Config::set('classify', $config);
+
+        $bardInput = '<a href="#">Some<span>thing</span></a>';
+
+        $classified = $this->classify->index($bardInput, [], []);
+
+        $this->assertEquals('<a href="#">Some<span class="text-red">thing</span></a>', $classified);
     }
 }

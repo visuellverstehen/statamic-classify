@@ -26,9 +26,10 @@ class Classify extends Modifier
          * Convert style segment information into the Tag class.
          * They will get Sorted by count to parse nested tags first.
          */
+
         $segments = collect($this->getStyleSegments($styleSet))
             ->map(fn ($classes, $tags) => new Tag($tags, $classes))
-            ->sortByDesc('count');
+            ->sortBy('count');
 
         $segments->each(function ($segment) use (&$value) {
             $value = app(ClassifyParser::class)->parse($segment, $value);

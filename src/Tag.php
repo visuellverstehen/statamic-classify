@@ -39,7 +39,15 @@ class Tag
      */
     private function convertTagsToArray(string $tags): array
     {
-        return explode(' ', $tags);
+        return collect(explode(' ', $tags))->reject(function ($tag) {
+            // Removes explicitly entered > symbols. These will be added
+            // back later when constructing the final CSS-style selector.
+            if ($tag == '>') {
+                return true;
+            }
+
+            return strlen(trim($tag)) == 0;
+        })->values()->all();
     }
 
     /*
