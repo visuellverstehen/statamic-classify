@@ -11,7 +11,7 @@ class HtmlParser implements ClassifyParser
         $selector = $tag->tag;
 
         if (count($tag->before) > 0) {
-            $selector = implode(' > ', $tag->before) . ' > '.$selector;
+            $selector = implode(' > ', $tag->before).' > '.$selector;
 
             $firstPart = strtolower($tag->before[0]);
 
