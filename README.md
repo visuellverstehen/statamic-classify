@@ -104,48 +104,21 @@ The ordering does not matter. Classify will take care of that for you.
 
 ## Working With CSS Frameworks Like Tailwind CSS
 
-Some CSS frameworks utilize JIT compiling, or have some other means of purging CSS classes from production builds to reduce file sizes. Classify provides a Laravel Artisan command to generate a JavaScript configuration file containing all Classify class names that can be used when configuring your CSS build process.
+Some CSS frameworks utilize JIT compiling, or have some other means of purging CSS classes from production builds to reduce file sizes.
 
-Running the following command from the root of the project:
-
-```
-php artisan classify:export
-```
-
-Would create a new (or update an existing) `classify.config.js` JavaScript file containing your Classify class name configuration:
+Make sure to include your CSS classes as content, so TailwindCSS can include those in the compiled file. This is important, as your
+classify CSS classes may not be in your template files, as they will be added dynamically.
 
 ```js
-module.exports.classes = [
-    "mt-8",
-    "first:mt-0",
-    "text-xs",
-    "uppercase",
-];
-```
-
-This configuration file can be used in conjunction with your CSS framework's build tools. For example, we can add our Classify class names to the Tailwind CSS 3 safe list ([https://tailwindcss.com/docs/content-configuration#safelisting-classes](https://tailwindcss.com/docs/content-configuration#safelisting-classes)):
-
-Within `tailwind.config.js`:
-
-```js
-const classify = require('./classify.config');
-
 module.exports = {
   content: [
-    './pages/**/*.{html,js}'
-    './components/**/*.{html,js}',
+    // all of your content files
+    // './pages/**/*.{html,js}'
+    // './components/**/*.{html,js}',
+    './config/classify.php',
   ],
-  safelist: [
-    ...classify.classes,
-    'bg-red-500',
-    'text-3xl',
-    'lg:text-4xl',
-  ]
-  // ...
 }
 ```
-
-> **Important**: Remember to run the `php artisan classify:export` command after making these changes to your Tailwind CSS configuration file before you build your front-end assets!
 
 # More about us
 - [www.statamic-agency.com](https://statamic-agency.com)
