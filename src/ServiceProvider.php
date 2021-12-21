@@ -11,6 +11,10 @@ class ServiceProvider extends AddonServiceProvider
         \VV\Classify\Modifiers\Classify::class,
     ];
 
+    protected $commands = [
+        \VV\Classify\Commands\Export::class,
+    ];
+
     public function boot()
     {
         parent::boot();

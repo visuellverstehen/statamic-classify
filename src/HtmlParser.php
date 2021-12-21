@@ -2,30 +2,42 @@
 
 namespace VV\Classify;
 
+use Symfony\Component\DomCrawler\Crawler;
+
 class HtmlParser implements ClassifyParser
 {
     public function parse(Tag $tag, string $value): string
     {
-        return preg_replace(
-            $this->defineRegexPattern($tag),
-            $this->defineReplacement($tag),
-            $value
-        );
-    }
+        $selector = $tag->tag;
 
-    private function defineRegexPattern(Tag $tag): string
-    {
-        $pattern = '';
+        if (count($tag->before) > 0) {
+            $selector = implode(' > ', $tag->before).' > '.$selector;
 
-        foreach ($tag->before as $name) {
-            $pattern .= "<{$name}[^>]*>[^<]*";
+            $firstPart = strtolower($tag->before[0]);
+
+            // Guard against producing selectors in the form: body > body > span.
+            if ($firstPart != 'body') {
+                $selector = 'body > '.$selector;
+            }
         }
 
-        return "/({$pattern})(<{$tag->tag})(?! class)/iU";
-    }
+        $crawler = new Crawler($value);
+        $nodes = $crawler->filter($selector);
 
-    private function defineReplacement(Tag $tag): string
-    {
-        return "$1<{$tag->tag} class=\"{$tag->classes}\"";
+        if (count($nodes) == 0) {
+            return $value;
+        }
+
+        foreach ($nodes as $node) {
+            $node->setAttribute('class', $tag->classes);
+        }
+
+        // Generate the HTML with our class adjustments made.
+        $result = $crawler->html();
+
+        // Removes the <body> and </body> tags that get added since it's a fragment.
+        $result = substr($result, 6);
+
+        return substr($result, 0, -7);
     }
 }

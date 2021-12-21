@@ -102,6 +102,50 @@ Let's assume you want to style links inside lists differently than a general lin
 
 The ordering does not matter. Classify will take care of that for you.
 
+## Working With CSS Frameworks Like Tailwind CSS
+
+Some CSS frameworks utilize JIT compiling, or have some other means of purging CSS classes from production builds to reduce file sizes. Classify provides a Laravel Artisan command to generate a JavaScript configuration file containing all Classify class names that can be used when configuring your CSS build process.
+
+Running the following command from the root of the project:
+
+```
+php artisan classify:export
+```
+
+Would create a new (or update an existing) `classify.config.js` JavaScript file containing your Classify class name configuration:
+
+```js
+module.exports.classes = [
+    "mt-8",
+    "first:mt-0",
+    "text-xs",
+    "uppercase",
+];
+```
+
+This configuration file can be used in conjunction with your CSS framework's build tools. For example, we can add our Classify class names to the Tailwind CSS 3 safe list ([https://tailwindcss.com/docs/content-configuration#safelisting-classes](https://tailwindcss.com/docs/content-configuration#safelisting-classes)):
+
+Within `tailwind.config.js`:
+
+```js
+const classify = require('./classify.config');
+
+module.exports = {
+  content: [
+    './pages/**/*.{html,js}'
+    './components/**/*.{html,js}',
+  ],
+  safelist: [
+    ...classify.classes,
+    'bg-red-500',
+    'text-3xl',
+    'lg:text-4xl',
+  ]
+  // ...
+}
+```
+
+> **Important**: Remember to run the `php artisan classify:export` command after making these changes to your Tailwind CSS configuration file before you build your front-end assets!
 
 # More about us
 - [www.statamic-agency.com](https://statamic-agency.com)
