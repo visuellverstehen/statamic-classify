@@ -31,8 +31,6 @@ jobs:
             statamic: ^3.2
           - laravel: 9.* 
             php: 7.4
-          - laravel: 9.*
-            testbench: 6.*
 
     name: P${{ matrix.php }} - S${{ matrix.statamic }} - L${{ matrix.laravel }}
 
