@@ -20,6 +20,9 @@ Classify is a useful helper to add CSS classes to your HTML tags, created by the
 | ^2.0      |  3.0     |  ^8.0
 | ^2.1      |  3.1     |  ^8.0
 | ^2.2      |  3.1     |  ^8.0
+| ^2.3      |  3.2     |  ^8.0
+| ^2.4      |  3.3     |  ^9.0
+
 
 ## Installation
 
