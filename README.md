@@ -21,7 +21,8 @@ Classify is a useful helper to add CSS classes to your HTML tags, created by the
 | ^2.1      |  3.1     |  ^8.0
 | ^2.2      |  3.1     |  ^8.0
 | ^2.3      |  3.2     |  ^8.0
-| ^2.4      |  3.3     |  ^9.0
+| ^2.4      |  3.*     |  ^9.0
+| ^2.5      |  3.*|4.* |  ^9.0
 
 
 ## Installation
@@ -92,6 +93,18 @@ If you want to add multiple style sets, define those in the config file. For exa
 
 // Antlers view
 {{ bard_text | classify:blog }}
+```
+
+If you want to get the defined classes for a certain element, you can get them straight from your config or use the `classify` tag:
+```
+{{ classify:h1 }}
+// output: text-2xl
+
+{{ classify element="li p" }}
+// output: mb-2 ml-4
+
+{{ classify:a styleset="blog" }}
+// output: link hover:underline
 ```
 
 ## Nested selectors (min version 2.2)

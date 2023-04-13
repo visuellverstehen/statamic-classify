@@ -10,6 +10,10 @@ class ServiceProvider extends AddonServiceProvider
     protected $modifiers = [
         \VV\Classify\Modifiers\Classify::class,
     ];
+    
+    protected $tags = [
+        \VV\Classify\Tags\Classify::class,
+    ];
 
     public function boot()
     {
