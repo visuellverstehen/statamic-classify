@@ -47,5 +47,10 @@
         "VV\\Classify\\ServiceProvider"
       ]
     }
+  },
+  "config": {
+    "allow-plugins": {
+      "pixelfear/composer-dist-plugin": false
+    }
   }
 }
