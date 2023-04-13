@@ -18,8 +18,7 @@ class TestCase extends OrchestraTestCase
         parent::setUp();
 
         if ($this->shouldFakeVersion) {
-            \Facades\Statamic\Version::shouldReceive('get')->andReturn('3.0.0-testing');
-            $this->addToAssertionCount(-1); // Dont want to assert this
+            \Facades\Statamic\Version::shouldReceive('get')->andReturn('4.0.0-testing');
         }
     }
 
