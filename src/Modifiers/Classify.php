@@ -21,13 +21,24 @@ class Classify extends Modifier
         if ((! $this->isStyleSetAvailable($styleSet)) || (null === $value)) {
             return $value;
         }
+        
+        // Resolve comma-separated tags first
+        $segments = [];
+        
+        foreach ($this->getStyleSegments($styleSet) as $tag => $classes) {
+            if (! strpos($tag, ',')) {
+                $segments[$tag] = $classes;
+            }
+            
+            foreach (explode(',', $tag) as $seperateTag) {
+                $segments[trim($seperateTag)] = $classes;
+            }
+        }
 
-        /*
-         * Convert style segment information into the Tag class.
-         * They will get Sorted by count to parse nested tags first.
-         */
+        // Convert style segment information into the Tag class.
+        // They will get sorted by count to parse nested tags first.
 
-        $segments = collect($this->getStyleSegments($styleSet))
+        $segments = collect($segments)
             ->map(fn ($classes, $tags) => new Tag($tags, $classes))
             ->sortBy('count');
 

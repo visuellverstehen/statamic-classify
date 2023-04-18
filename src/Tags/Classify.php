@@ -42,6 +42,24 @@ class Classify extends Tags
     {
         $styleset = $this->params->get('styleset') ?? 'default';
         
-        return config("classify.{$styleset}.{$element}") ?? '';
+        if ($classes = config("classify.{$styleset}.{$element}")) {
+            return $classes;
+        }
+        
+        foreach (config("classify.{$styleset}") as $tag => $classes) {
+            if (! strpos($tag, ',')) {
+                continue;
+            }
+            
+            $index = collect(explode(',', $tag))
+                ->transform(fn ($item) => trim($item))
+                ->search($element);
+            
+            if ($index !== false) {
+                return $classes;
+            }
+        }
+        
+        return '';
     }
 }
