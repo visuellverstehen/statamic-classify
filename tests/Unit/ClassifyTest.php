@@ -20,6 +20,7 @@ class ClassifyTest extends TestCase
                 'a'  => 'link',
                 'p' => 'text-base',
                 'li p' => 'text-sm',
+                'strong, em' => 'text-red',
             ],
         ];
 
@@ -410,5 +411,15 @@ EOT;
         $classified = $this->classify->index($bardInput, [], []);
 
         $this->assertEquals('<a href="#">Some<span class="text-red">thing</span></a>', $classified);
+    }
+    
+    /** @test */
+    public function a_chained_selector_will_be_recognized()
+    {
+        $bardInput = '<strong>wonderful!</strong>';
+        
+        $classified = $this->classify->index($bardInput, [], []);
+        
+        $this->assertEquals('<strong class="text-red">wonderful!</strong>', $classified);
     }
 }
