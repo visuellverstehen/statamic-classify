@@ -30,6 +30,10 @@ jobs:
             statamic: ^3.2
           - laravel: 9.* 
             php: 7.4
+          - laravel: 10.*
+            php: 8.0
+          - laravel: 10.*
+            php: 7.4
 
     name: P${{ matrix.php }} - S${{ matrix.statamic }} - L${{ matrix.laravel }}
 
