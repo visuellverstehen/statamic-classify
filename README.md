@@ -1,5 +1,6 @@
 [![Statamic 3](https://img.shields.io/badge/Statamic-v3-FF269E?style=for-the-badge&link=https://statamic.com)](https://statamic.com/addons/visuellverstehen/classify) 
 [![Statamic 4](https://img.shields.io/badge/Statamic-v4-FF269E?style=for-the-badge&link=https://statamic.com)](https://statamic.com/addons/visuellverstehen/classify) 
+[![Statamic 5](https://img.shields.io/badge/Statamic-v5-FF269E?style=for-the-badge&link=https://statamic.com)](https://statamic.com/addons/visuellverstehen/classify) 
 [![Latest version on Packagist](https://img.shields.io/packagist/v/visuellverstehen/statamic-classify.svg?style=for-the-badge)](https://packagist.org/packages/visuellverstehen/statamic-classify)
 
 # Classify
