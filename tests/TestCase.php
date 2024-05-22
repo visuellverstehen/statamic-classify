@@ -81,7 +81,12 @@ class TestCase extends OrchestraTestCase
         ];
 
         foreach ($configs as $config) {
-            $app['config']->set("statamic.$config", require(__DIR__."/../vendor/statamic/cms/config/{$config}.php"));
+            $path = __DIR__."/../vendor/statamic/cms/config/{$config}.php";
+            
+            // Statamic 5 does not have a `sites` config anymore, so we better check first
+            if (file_exists($path)) {
+                $app['config']->set("statamic.$config", require($path));
+            }
         }
 
         // Setting the user repository to the default flat file system
