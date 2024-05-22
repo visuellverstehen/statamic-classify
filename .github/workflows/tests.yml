@@ -20,13 +20,11 @@ jobs:
         dependency-version: [prefer-lowest, prefer-stable]
         include:
           - laravel: 11.*
-            framework: ^11.0
             testbench: 9.*
           - laravel: 10.*
-            framework: ^10.0
             testbench: 8.*
 
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }} - ubuntu-latest
+    name: P${{ matrix.php }} - L${{ matrix.laravel }} - S${{ matrix.statamic }} - ${{ matrix.dependency-version }}
 
     steps:
       - name: Checkout code
