@@ -6,12 +6,12 @@
   "type": "statamic-addon",
   "autoload": {
     "psr-4": {
-      "VV\\Classify\\": "src"
+      "VV\\Classify\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "VV\\Classify\\Tests\\": "tests"
+      "VV\\Classify\\Tests\\": "tests/"
     }
   },
   "authors": [
