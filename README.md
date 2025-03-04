@@ -87,6 +87,13 @@ If you want to get the defined classes for a certain element, you can get them s
 // output: link hover:underline
 ```
 
+## Usage with Blade
+
+If you wish to use classify with Blade instead of Antlers:
+```php
+{!! Statamic::modify($content)->classify('default') !!}
+```
+
 ## Nested selectors
 You can nest your selectors to style elements differently in varying contexts. 
 
