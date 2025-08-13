@@ -91,7 +91,9 @@ If you want to get the defined classes for a certain element, you can get them s
 
 If you wish to use classify with Blade instead of Antlers:
 ```php
-{!! Statamic::modify($content)->classify('default') !!}
+// no param is needed to use the 'default' styleset
+{!! Statamic::modify($bard_text)->classify() !!}
+{!! Statamic::modify($bard_text)->classify('blog') !!}
 ```
 
 ## Nested selectors
