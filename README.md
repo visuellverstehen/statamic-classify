@@ -99,6 +99,17 @@ Let's assume you want to style links inside lists differently to a general link,
 
 Classify will take care of the order, so you don't need to define the nested selector before the general selector.
 
+### Important: Direct child relationships
+
+**Note:** Nested selectors use CSS direct child selectors (`>`), which means each element must be a **direct child** of the previous element in the selector.
+
+For example:
+- `'li p'` matches `<li><p>content</p></li>` ✅
+- `'ul p'` does **not** match `<ul><li><p>content</p></li></ul>` ❌ (because `p` is not a direct child of `ul`)
+
+If you need to target elements with intermediate elements, define the complete path:
+- Use `'ul li p'` to match `<ul><li><p>content</p></li></ul>` ✅
+
 ## Working with CSS frameworks (like TailwindCSS)
 
 Some CSS frameworks utilize JIT compiling, or have some other means of purging CSS classes from production builds to reduce file size. Your classify CSS classes may not appear anywhere else in your template files, as they will be added dynamically. To make sure that your classes will be considered for compiling, you have to include the classify config file as content:
