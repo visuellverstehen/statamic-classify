@@ -14,11 +14,13 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        php: [8.3, 8.2]
-        laravel: [11.*, 10.*]
+        php: [8.4, 8.3, 8.2]
+        laravel: [12.*, 11.*, 10.*]
         statamic: [5.*, 4.*]
         dependency-version: [prefer-lowest, prefer-stable]
         include:
+          - laravel: 12.*
+            testbench: 10.*
           - laravel: 11.*
             testbench: 9.*
           - laravel: 10.*
