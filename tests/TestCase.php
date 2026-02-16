@@ -89,9 +89,7 @@ class TestCase extends OrchestraTestCase
         // Setting the user repository to the default flat file system
         $app['config']->set('statamic.users.repository', 'file');
 
-        // Assume the free edition within tests when available.
-        if ($app['config']->has('statamic.editions.pro')) {
-            $app['config']->set('statamic.editions.pro', false);
-        }
+        // Assume the free edition within tests
+        $app['config']->set('statamic.editions.pro', false);
     }
 }
