@@ -32,12 +32,13 @@ class HtmlParser implements ClassifyParser
             $node->setAttribute('class', $tag->classes);
         }
 
-        // Generate the HTML with our class adjustments made.
-        $result = $crawler->html();
+        // DomCrawler wraps fragments in head/body; return the body contents when present.
+        $body = $crawler->filter('body');
 
-        // Removes the <body> and </body> tags that get added since it's a fragment.
-        $result = substr($result, 6);
+        if ($body->count() > 0) {
+            return $body->html();
+        }
 
-        return substr($result, 0, -7);
+        return $crawler->html();
     }
 }

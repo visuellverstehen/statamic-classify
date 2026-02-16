@@ -3,7 +3,6 @@
 namespace VV\Classify\Tests;
 
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
-use Statamic\Extend\Manifest;
 use Statamic\Statamic;
 
 class TestCase extends OrchestraTestCase
@@ -58,7 +57,11 @@ class TestCase extends OrchestraTestCase
     {
         parent::getEnvironmentSetUp($app);
 
-        $app->make(Manifest::class)->manifest = [
+        $manifestClass = class_exists(\Statamic\Addons\Manifest::class)
+            ? \Statamic\Addons\Manifest::class
+            : \Statamic\Extend\Manifest::class;
+
+        $app->make($manifestClass)->manifest = [
             'visuellverstehen/statamic-classify' => [
                 'id'        => 'visuellverstehen/statamic-classify',
                 'namespace' => 'VV\\Classify\\',
@@ -75,24 +78,20 @@ class TestCase extends OrchestraTestCase
     {
         parent::resolveApplicationConfiguration($app);
 
-        $configs = [
-            'assets', 'cp', 'forms', 'routes', 'static_caching',
-            'sites', 'stache', 'system', 'users',
-        ];
+        $configDirectory = __DIR__.'/../vendor/statamic/cms/config';
+        $configPaths = glob($configDirectory.'/*.php') ?: [];
 
-        foreach ($configs as $config) {
-            $path = __DIR__."/../vendor/statamic/cms/config/{$config}.php";
-            
-            // Statamic 5 does not have a `sites` config anymore, so we better check first
-            if (file_exists($path)) {
-                $app['config']->set("statamic.$config", require($path));
-            }
+        foreach ($configPaths as $path) {
+            $config = basename($path, '.php');
+            $app['config']->set("statamic.$config", require $path);
         }
 
         // Setting the user repository to the default flat file system
         $app['config']->set('statamic.users.repository', 'file');
 
-        // Assume the pro edition within tests
-        $app['config']->set('statamic.editions.pro', false);
+        // Assume the free edition within tests when available.
+        if ($app['config']->has('statamic.editions.pro')) {
+            $app['config']->set('statamic.editions.pro', false);
+        }
     }
 }
