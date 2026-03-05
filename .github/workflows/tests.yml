@@ -15,8 +15,8 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         php: [8.4, 8.3, 8.2]
-        laravel: [12.*, 11.*, 10.*]
-        statamic: [5.*, 4.*]
+        laravel: ['10.*', '11.*', '12.*', '13.*']
+        statamic: ['5.*', '4.*']
         dependency-version: [prefer-lowest, prefer-stable]
         include:
           - laravel: 12.*
@@ -25,6 +25,11 @@ jobs:
             testbench: 9.*
           - laravel: 10.*
             testbench: 8.*
+          - laravel: 13.*
+            testbench: 11.*
+        exclude:
+          - laravel: 13.*
+            php: 8.2
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - S${{ matrix.statamic }} - ${{ matrix.dependency-version }}
 
@@ -43,5 +48,6 @@ jobs:
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" ${{ matrix.additional-deps }} --no-interaction --no-update
           composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
+
       - name: Run PHPUnit
         run: composer test
