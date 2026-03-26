@@ -1,97 +1,182 @@
 <?php
 
+namespace VV\Classify\Tests\Unit;
+
 use Illuminate\Support\Facades\Config;
 use VV\Classify\Modifiers\Classify;
+use VV\Classify\Tests\TestCase;
 
-beforeEach(function () {
-    Config::set('classify', [
-        'default' => [
-            'h1' => 'headline',
-            'a'  => 'link',
-            'p' => 'text-base',
-            'li p' => 'text-sm',
-            'strong, em' => 'text-red',
-        ],
-    ]);
+class ClassifyTest extends TestCase
+{
+    protected Classify $classify;
 
-    $this->classify = new Classify();
-});
+    public function setUp(): void
+    {
+        parent::setUp();
 
-it('applies class to a single tag', function () {
-    expect($this->classify->index('<h1>Hello world</h1>', [], []))
-        ->toBe('<h1 class="headline">Hello world</h1>');
-});
+        $config = [
+            'default'  => [
+                'h1' => 'headline',
+                'a'  => 'link',
+                'p' => 'text-base',
+                'li p' => 'text-sm',
+                'strong, em' => 'text-red',
+            ],
+        ];
 
-it('applies class to a tag with existing attributes', function () {
-    expect($this->classify->index('<a href="#">Link</a>', [], []))
-        ->toBe('<a href="#" class="link">Link</a>');
-});
+        Config::set('classify', $config);
 
-it('recognizes a nested selector', function () {
-    Config::set('classify', ['default' => ['li p' => 'text-sm']]);
+        $this->classify = new Classify();
+    }
 
-    expect($this->classify->index('<li><p>Some text</p></li>', [], []))
-        ->toBe('<li><p class="text-sm">Some text</p></li>');
-});
+    /** @test */
+    public function a_single_tag_will_be_extended_with_the_given_class_names()
+    {
+        $bardInput = '<h1>Hello world</h1>';
 
-it('recognizes a nested tag with text in between', function () {
-    Config::set('classify', ['default' => ['a span' => 'text-red']]);
+        $classified = $this->classify->index($bardInput, [], []);
 
-    expect($this->classify->index('<a>Some <span>styled</span> text</a>', [], []))
-        ->toBe('<a>Some <span class="text-red">styled</span> text</a>');
-});
+        $this->assertEquals('<h1 class="headline">Hello world</h1>', $classified);
+    }
 
-it('handles nested tags across multiple lines', function () {
-    Config::set('classify', ['default' => ['li p' => 'text-bold']]);
+    /** @test */
+    public function a_singletag_will_be_extended_with_the_given_class_names()
+    {
+        $bardInput = '<a href="#">Link</a>';
 
-    $input = <<<'EOT'
+        $classified = $this->classify->index($bardInput, [], []);
+
+        $this->assertEquals('<a href="#" class="link">Link</a>', $classified);
+    }
+
+    /** @test */
+    public function a_nested_tag_will_be_recognized()
+    {
+        $config = [
+            'default'  => [
+                'li p' => 'text-sm',
+            ],
+        ];
+
+        Config::set('classify', $config);
+
+        $bardInput = '<li><p>Some text</p></li>';
+
+        $classified = $this->classify->index($bardInput, [], []);
+
+        $this->assertEquals('<li><p class="text-sm">Some text</p></li>', $classified);
+    }
+
+    /** @test */
+    public function a_nested_tag_with_text_inbetween_will_be_recognized()
+    {
+        $config = [
+            'default'  => [
+                'a span' => 'text-red',
+            ],
+        ];
+
+        Config::set('classify', $config);
+
+        $bardInput = '<a>Some <span>styled</span> text</a>';
+
+        $classified = $this->classify->index($bardInput, [], []);
+
+        $this->assertEquals('<a>Some <span class="text-red">styled</span> text</a>', $classified);
+    }
+
+    /** @test */
+    public function a_nested_tag_with_text_inbetween_will_be_recognized_on_multilines_as_well()
+    {
+        $config = [
+            'default'  => [
+                'li p' => 'text-bold',
+            ],
+        ];
+
+        Config::set('classify', $config);
+
+        $bardInput = <<<'EOT'
                      <li>Bad formatted HTML
                         <p>Some more</p>
                      </li>
                      EOT;
 
-    $expected = <<<'EOT'
+        $expedtedOutput = <<<'EOT'
                           <li>Bad formatted HTML
                              <p class="text-bold">Some more</p>
                           </li>
                           EOT;
 
-    expect($this->classify->index($input, [], []))->toBe($expected);
-});
+        $classified = $this->classify->index($bardInput, [], []);
 
-it('parses nested tags with already defined classes', function () {
-    Config::set('classify', ['default' => ['a span' => 'text-red']]);
+        $this->assertEquals($expedtedOutput, $classified);
+    }
 
-    expect($this->classify->index('<a href="#">Some<span>thing</span></a>', [], []))
-        ->toBe('<a href="#">Some<span class="text-red">thing</span></a>');
-});
+    /** @test */
+    public function a_nested_tag_with_already_defined_classes_will_be_parsed_correctly()
+    {
+        $config = [
+            'default'  => [
+                'a span' => 'text-red',
+            ],
+        ];
 
-it('replaces nested selectors without overwriting simpler ones', function () {
-    Config::set('classify', ['default' => ['p' => 'single', 'li p' => 'nested']]);
+        Config::set('classify', $config);
 
-    $input = <<<'EOT'
+        $bardInput = '<a href="#">Some<span>thing</span></a>';
+
+        $classified = $this->classify->index($bardInput, [], []);
+
+        $this->assertEquals('<a href="#">Some<span class="text-red">thing</span></a>', $classified);
+    }
+
+    /** @test */
+    public function a_nested_tag_will_be_replaced_and_wont_be_overwritten()
+    {
+        $config = [
+            'default'  => [
+                'p' => 'single',
+                'li p' => 'nested',
+            ],
+        ];
+
+        Config::set('classify', $config);
+
+        $bardInput = <<<'EOT'
                      <li>
                         <p>I am nested</p>
                      </li>
-
+                     
                      <p>I am not</p>
                      EOT;
 
-    $expected = <<<'EOT'
+        $expedtedOutput = <<<'EOT'
                           <li>
                              <p class="nested">I am nested</p>
                           </li>
-
+                          
                           <p class="single">I am not</p>
                           EOT;
 
-    expect($this->classify->index($input, [], []))->toBe($expected);
-});
+        $classified = $this->classify->index($bardInput, [], []);
 
-it('assigns classes to all matching list items', function () {
-    Config::set('classify', ['default' => ['ul' => 'parent', 'ul li' => 'nested']]);
+        $this->assertEquals($expedtedOutput, $classified);
+    }
 
-    $input = <<<'EOT'
+    /** @test */
+    public function all_list_items_will_be_assigned_to_a_class()
+    {
+        $config = [
+            'default'  => [
+                'ul' => 'parent',
+                'ul li' => 'nested',
+            ],
+        ];
+
+        Config::set('classify', $config);
+
+        $bardInput = <<<'EOT'
                      <ul>
                         <li>I am nested 1</li>
                         <li>I am nested 2</li>
@@ -99,7 +184,7 @@ it('assigns classes to all matching list items', function () {
                      </ul>
                      EOT;
 
-    $expected = <<<'EOT'
+        $expedtedOutput = <<<'EOT'
                           <ul class="parent">
                              <li class="nested">I am nested 1</li>
                              <li class="nested">I am nested 2</li>
@@ -107,21 +192,29 @@ it('assigns classes to all matching list items', function () {
                           </ul>
                           EOT;
 
-    expect($this->classify->index($input, [], []))->toBe($expected);
-});
+        $classified = $this->classify->index($bardInput, [], []);
 
-it('targets deeply nested elements', function () {
-    Config::set('classify', ['default' => [
-        'a' => 'root-link',
-        'ul' => 'parent',
-        'ul li' => 'nested',
-        'ul li a' => 'first-nested-links',
-        'ul li ul' => 'nested-parent',
-        'ul li ul li' => 'nested-item',
-        'ul li ul li a' => 'deeply-nested-links',
-    ]]);
+        $this->assertEquals($expedtedOutput, $classified);
+    }
 
-    $input = <<<'EOT'
+    /** @test */
+    public function deeply_nested_elements_can_be_targeted()
+    {
+        $config = [
+            'default'  => [
+                'a' => 'root-link',
+                'ul' => 'parent',
+                'ul li' => 'nested',
+                'ul li a' => 'first-nested-links',
+                'ul li ul' => 'nested-parent',
+                'ul li ul li' => 'nested-item',
+                'ul li ul li a' => 'deeply-nested-links',
+            ],
+        ];
+
+        Config::set('classify', $config);
+
+        $bardInput = <<<'EOT'
  <a>Root link</a>
  <ul>
     <li><a>I am nested 1</a></li>
@@ -137,7 +230,7 @@ it('targets deeply nested elements', function () {
  </ul>
  EOT;
 
-    $expected = <<<'EOT'
+        $expedtedOutput = <<<'EOT'
 <a class="root-link">Root link</a>
 <ul class="parent">
    <li class="nested"><a class="first-nested-links">I am nested 1</a></li>
@@ -153,22 +246,30 @@ it('targets deeply nested elements', function () {
 </ul>
 EOT;
 
-    expect($this->classify->index($input, [], []))->toBe($expected);
-});
+        $classified = $this->classify->index($bardInput, [], []);
 
-it('targets deeply nested elements with css pseudo-selectors', function () {
-    Config::set('classify', ['default' => [
-        'a' => 'root-link',
-        'ul' => 'parent',
-        'ul li' => 'nested',
-        'ul li:nth-child(2n+2)' => 'nested nested-even',
-        'ul li a' => 'first-nested-links',
-        'ul li ul' => 'nested-parent',
-        'ul li ul li' => 'nested-item',
-        'ul li ul li a' => 'deeply-nested-links',
-    ]]);
+        $this->assertEquals($expedtedOutput, $classified);
+    }
 
-    $input = <<<'EOT'
+    /** @test */
+    public function deeply_nested_elements_can_be_targeted_with_css_selectors()
+    {
+        $config = [
+            'default'  => [
+                'a' => 'root-link',
+                'ul' => 'parent',
+                'ul li' => 'nested',
+                'ul li:nth-child(2n+2)' => 'nested nested-even',
+                'ul li a' => 'first-nested-links',
+                'ul li ul' => 'nested-parent',
+                'ul li ul li' => 'nested-item',
+                'ul li ul li a' => 'deeply-nested-links',
+            ],
+        ];
+
+        Config::set('classify', $config);
+
+        $bardInput = <<<'EOT'
  <a>Root link</a>
  <ul>
     <li><a>I am nested 1</a></li>
@@ -184,7 +285,7 @@ it('targets deeply nested elements with css pseudo-selectors', function () {
  </ul>
  EOT;
 
-    $expected = <<<'EOT'
+        $expedtedOutput = <<<'EOT'
 <a class="root-link">Root link</a>
 <ul class="parent">
    <li class="nested"><a class="first-nested-links">I am nested 1</a></li>
@@ -200,20 +301,28 @@ it('targets deeply nested elements with css pseudo-selectors', function () {
 </ul>
 EOT;
 
-    expect($this->classify->index($input, [], []))->toBe($expected);
-});
+        $classified = $this->classify->index($bardInput, [], []);
 
-it('falls back to root selector when no nested match exists', function () {
-    Config::set('classify', ['default' => [
-        'a' => 'root-link',
-        'ul' => 'parent',
-        'ul li' => 'nested',
-        'ul li a' => 'first-nested-links',
-        'ul li ul' => 'nested-parent',
-        'ul li ul li' => 'nested-item',
-    ]]);
+        $this->assertEquals($expedtedOutput, $classified);
+    }
 
-    $input = <<<'EOT'
+    /** @test */
+    public function root_link_class_is_applied_to_all_but_first_list_item_links()
+    {
+        $config = [
+            'default'  => [
+                'a' => 'root-link',
+                'ul' => 'parent',
+                'ul li' => 'nested',
+                'ul li a' => 'first-nested-links',
+                'ul li ul' => 'nested-parent',
+                'ul li ul li' => 'nested-item',
+            ],
+        ];
+
+        Config::set('classify', $config);
+
+        $bardInput = <<<'EOT'
  <a>Root link</a>
  <ul>
     <li><a>I am nested 1</a></li>
@@ -229,7 +338,7 @@ it('falls back to root selector when no nested match exists', function () {
  </ul>
  EOT;
 
-    $expected = <<<'EOT'
+        $expedtedOutput = <<<'EOT'
 <a class="root-link">Root link</a>
 <ul class="parent">
    <li class="nested"><a class="first-nested-links">I am nested 1</a></li>
@@ -245,31 +354,72 @@ it('falls back to root selector when no nested match exists', function () {
 </ul>
 EOT;
 
-    expect($this->classify->index($input, [], []))->toBe($expected);
-});
+        $classified = $this->classify->index($bardInput, [], []);
 
-it('handles an explicit body root in selectors', function () {
-    Config::set('classify', ['default' => ['body a span' => 'text-red']]);
+        $this->assertEquals($expedtedOutput, $classified);
+    }
 
-    expect($this->classify->index('<a href="#">Some<span>thing</span></a>', [], []))
-        ->toBe('<a href="#">Some<span class="text-red">thing</span></a>');
-});
+    /** @test */
+    public function adding_an_explicit_body_root_does_not_break_selectors()
+    {
+        $config = [
+            'default'  => [
+                'body a span' => 'text-red',
+            ],
+        ];
 
-it('normalizes excessive whitespace in selectors', function () {
-    Config::set('classify', ['default' => ['   a       span    ' => 'text-red']]);
+        Config::set('classify', $config);
 
-    expect($this->classify->index('<a href="#">Some<span>thing</span></a>', [], []))
-        ->toBe('<a href="#">Some<span class="text-red">thing</span></a>');
-});
+        $bardInput = '<a href="#">Some<span>thing</span></a>';
 
-it('handles explicit greater-than symbols without doubling selectors', function () {
-    Config::set('classify', ['default' => [' body >    a>span    ' => 'text-red']]);
+        $classified = $this->classify->index($bardInput, [], []);
 
-    expect($this->classify->index('<a href="#">Some<span>thing</span></a>', [], []))
-        ->toBe('<a href="#">Some<span class="text-red">thing</span></a>');
-});
+        $this->assertEquals('<a href="#">Some<span class="text-red">thing</span></a>', $classified);
+    }
 
-it('recognizes comma-separated selectors', function () {
-    expect($this->classify->index('<strong>wonderful!</strong>', [], []))
-        ->toBe('<strong class="text-red">wonderful!</strong>');
-});
+    /** @test */
+    public function adding_excessive_whitespace_produces_compatible_selectors()
+    {
+        $config = [
+            'default'  => [
+                '   a       span    ' => 'text-red',
+            ],
+        ];
+
+        Config::set('classify', $config);
+
+        $bardInput = '<a href="#">Some<span>thing</span></a>';
+
+        $classified = $this->classify->index($bardInput, [], []);
+
+        $this->assertEquals('<a href="#">Some<span class="text-red">thing</span></a>', $classified);
+    }
+
+    /** @test */
+    public function adding_explicit_greater_than_symbols_doesnt_double_up_internal_selectors()
+    {
+        $config = [
+            'default'  => [
+                ' body >    a>span    ' => 'text-red',
+            ],
+        ];
+
+        Config::set('classify', $config);
+
+        $bardInput = '<a href="#">Some<span>thing</span></a>';
+
+        $classified = $this->classify->index($bardInput, [], []);
+
+        $this->assertEquals('<a href="#">Some<span class="text-red">thing</span></a>', $classified);
+    }
+    
+    /** @test */
+    public function a_chained_selector_will_be_recognized()
+    {
+        $bardInput = '<strong>wonderful!</strong>';
+        
+        $classified = $this->classify->index($bardInput, [], []);
+        
+        $this->assertEquals('<strong class="text-red">wonderful!</strong>', $classified);
+    }
+}
