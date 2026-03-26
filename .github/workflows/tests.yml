@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [8.4, 8.3, 8.2]
+        php: [8.4, 8.3]
         laravel: ['11.*', '12.*', '13.*']
         statamic: ['5.*', '6.*']
         include:
@@ -24,8 +24,6 @@ jobs:
           - laravel: 13.*
             testbench: 11.*
         exclude:
-          - laravel: 13.*
-            php: 8.2
           - laravel: 13.*
             statamic: 5.*
           - laravel: 11.*
