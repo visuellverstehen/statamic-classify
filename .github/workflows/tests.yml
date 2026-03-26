@@ -8,34 +8,34 @@ on:
 
 jobs:
   php-tests:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
         php: [8.4, 8.3, 8.2]
-        laravel: ['10.*', '11.*', '12.*', '13.*']
-        statamic: ['5.*', '4.*']
-        dependency-version: [prefer-lowest, prefer-stable]
+        laravel: ['11.*', '12.*', '13.*']
+        statamic: ['5.*', '6.*']
         include:
-          - laravel: 12.*
-            testbench: 10.*
           - laravel: 11.*
             testbench: 9.*
-          - laravel: 10.*
-            testbench: 8.*
+          - laravel: 12.*
+            testbench: 10.*
           - laravel: 13.*
             testbench: 11.*
         exclude:
           - laravel: 13.*
             php: 8.2
+          - laravel: 13.*
+            statamic: 5.*
+          - laravel: 11.*
+            statamic: 6.*
 
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - S${{ matrix.statamic }} - ${{ matrix.dependency-version }}
+    name: P${{ matrix.php }} - L${{ matrix.laravel }} - S${{ matrix.statamic }}
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -46,8 +46,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" ${{ matrix.additional-deps }} --no-interaction --no-update
-          composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
+          composer require "laravel/framework:${{ matrix.laravel }}" "statamic/cms:${{ matrix.statamic }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer update --prefer-stable --prefer-dist --no-interaction --no-suggest
 
-      - name: Run PHPUnit
+      - name: Run tests
         run: composer test
